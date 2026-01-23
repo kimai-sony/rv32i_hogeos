@@ -31,13 +31,13 @@ set_target_properties(hogeos.elf PROPERTIES
 
 # Custom target to generate binary file
 add_custom_command(TARGET hogeos.elf POST_BUILD
-    COMMAND llvm-objcopy -O binary hogeos.elf hogeos.bin
+    COMMAND /usr/lib/llvm-18/bin/llvm-objcopy -O binary hogeos.elf hogeos.bin
     COMMENT "Generating binary file hogeos.bin"
 )
 
 # Custom target to show size information
 add_custom_command(TARGET hogeos.elf POST_BUILD
-    COMMAND llvm-size hogeos.elf
+    COMMAND /usr/lib/llvm-18/bin/llvm-size hogeos.elf
     COMMENT "Size information:"
 )
 
