@@ -23,6 +23,11 @@ cmake ..
 make
 ```
 
+Or use the convenience script:
+```bash
+./build.sh
+```
+
 This will generate:
 - `hogeos.elf` - ELF executable
 - `hogeos.bin` - Raw binary
@@ -31,6 +36,11 @@ This will generate:
 To run on QEMU virt machine:
 ```bash
 qemu-system-riscv32 -machine virt -nographic -bios none -kernel build/hogeos.elf
+```
+
+Or use the convenience script:
+```bash
+./run.sh
 ```
 
 To exit QEMU, press `Ctrl-A` then `X`.
