@@ -57,6 +57,7 @@ dkms.conf
 # CMake build directories
 build/
 build-*/
+_codeql_build_dir/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
