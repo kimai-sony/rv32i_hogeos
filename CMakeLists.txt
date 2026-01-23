@@ -29,17 +29,39 @@ set_target_properties(hogeos.elf PROPERTIES
     LINK_FLAGS "-T ${CMAKE_CURRENT_SOURCE_DIR}/linker.ld"
 )
 
-# Custom target to generate binary file
-add_custom_command(TARGET hogeos.elf POST_BUILD
-    COMMAND /usr/lib/llvm-18/bin/llvm-objcopy -O binary hogeos.elf hogeos.bin
-    COMMENT "Generating binary file hogeos.bin"
+# Find LLVM tools
+find_program(LLVM_OBJCOPY llvm-objcopy
+    PATHS /usr/lib/llvm-18/bin /usr/lib/llvm-17/bin /usr/lib/llvm-16/bin
+    DOC "Path to llvm-objcopy"
+)
+find_program(LLVM_SIZE llvm-size
+    PATHS /usr/lib/llvm-18/bin /usr/lib/llvm-17/bin /usr/lib/llvm-16/bin
+    DOC "Path to llvm-size"
 )
 
+if(NOT LLVM_OBJCOPY)
+    message(WARNING "llvm-objcopy not found, binary file will not be generated")
+endif()
+
+if(NOT LLVM_SIZE)
+    message(WARNING "llvm-size not found, size information will not be displayed")
+endif()
+
+# Custom target to generate binary file
+if(LLVM_OBJCOPY)
+    add_custom_command(TARGET hogeos.elf POST_BUILD
+        COMMAND ${LLVM_OBJCOPY} -O binary hogeos.elf hogeos.bin
+        COMMENT "Generating binary file hogeos.bin"
+    )
+endif()
+
 # Custom target to show size information
-add_custom_command(TARGET hogeos.elf POST_BUILD
-    COMMAND /usr/lib/llvm-18/bin/llvm-size hogeos.elf
-    COMMENT "Size information:"
-)
+if(LLVM_SIZE)
+    add_custom_command(TARGET hogeos.elf POST_BUILD
+        COMMAND ${LLVM_SIZE} hogeos.elf
+        COMMENT "Size information:"
+    )
+endif()
 
 # Print build information
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
